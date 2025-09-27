@@ -1,0 +1,7 @@
+{
+  "name": "Virtual Fitting Room",
+  "description": "An application that allows users to virtually try on clothes using their camera and AI-powered image generation.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
