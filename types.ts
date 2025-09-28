@@ -7,4 +7,4 @@ export enum AppStep {
   Result,
 }
 
-export type ClothingType = 'Top' | 'Bottom' | 'Shoes';
+export type ClothingType = 'Top' | 'Bottom' | 'Shoes' | 'Hairstyle';

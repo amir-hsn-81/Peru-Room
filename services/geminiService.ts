@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Modality } from "@google/genai";
 import { ClothingType } from "../types";
 
@@ -21,6 +20,8 @@ function getClothingItemName(clothingType: ClothingType): string {
       return 'pants';
     case 'Shoes':
       return 'shoes';
+    case 'Hairstyle':
+      return 'hairstyle';
   }
 }
 
@@ -34,7 +35,10 @@ export const virtualTryOn = async (
     const clothingImagePart = fileToGenerativePart(clothingImage, 'image/jpeg');
     const clothingItemName = getClothingItemName(clothingType);
 
-    const prompt = `Take the person from the first image and realistically place the ${clothingItemName} from the second image onto them. Adjust the clothing to fit their body and pose. Maintain the original background of the person's image.`;
+    const isHairstyle = clothingType === 'Hairstyle';
+    const prompt = isHairstyle
+      ? `Take the person from the first image and realistically apply the ${clothingItemName} from the second image onto their head. Adjust the hairstyle to fit their head shape and pose naturally. Ensure the new hairstyle blends seamlessly with the person's face and the original background is maintained.`
+      : `Take the person from the first image and realistically place the ${clothingItemName} from the second image onto them. Adjust the clothing to fit their body and pose. Maintain the original background of the person's image.`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image-preview',
