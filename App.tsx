@@ -7,6 +7,27 @@ import ProcessingStep from './components/ProcessingStep';
 import ResultStep from './components/ResultStep';
 import { virtualTryOn } from './services/geminiService';
 
+// Check if the API key is provided through environment variables.
+const isApiKeyConfigured = process.env.API_KEY && process.env.API_KEY.length > 0;
+
+const ApiKeyNotConfigured: React.FC = () => (
+    <div className="flex flex-col items-center justify-center text-center p-8 h-full animate-fade-in-down">
+        <div className="w-16 h-16 mb-6 text-red-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+            </svg>
+        </div>
+        <h1 className="text-3xl font-bold text-gray-100 mb-4">Configuration Required</h1>
+        <p className="text-lg text-gray-400 max-w-lg mx-auto">
+            This application cannot connect to the AI service. The <code className="bg-gray-800 text-yellow-400 px-2 py-1 rounded">API_KEY</code> is missing.
+        </p>
+        <p className="text-md text-gray-500 max-w-lg mx-auto mt-4">
+            Please configure this in your hosting environment's variables to enable the app.
+        </p>
+    </div>
+);
+
+
 const App: React.FC = () => {
   const [step, setStep] = useState<AppStep>(AppStep.Welcome);
   const [userImage, setUserImage] = useState<string | null>(null);
@@ -94,16 +115,22 @@ const App: React.FC = () => {
   return (
     <main className="bg-black min-h-screen w-full flex flex-col items-center justify-center transition-all duration-500 text-gray-200">
         <div className="w-full h-full flex-grow flex items-center justify-center p-4">
-            {error && (
-                <div 
-                    className="absolute top-5 bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg shadow-md z-10 animate-fade-in-down"
-                    role="alert"
-                >
-                    <strong className="font-bold">Error: </strong>
-                    <span className="block sm:inline">{error}</span>
-                </div>
+            {!isApiKeyConfigured ? (
+                <ApiKeyNotConfigured />
+            ) : (
+                <>
+                    {error && (
+                        <div 
+                            className="absolute top-5 bg-red-900/50 border border-red-700 text-red-300 px-4 py-3 rounded-lg shadow-md z-10 animate-fade-in-down"
+                            role="alert"
+                        >
+                            <strong className="font-bold">Error: </strong>
+                            <span className="block sm:inline">{error}</span>
+                        </div>
+                    )}
+                    {renderStep()}
+                </>
             )}
-            {renderStep()}
         </div>
     </main>
   );
